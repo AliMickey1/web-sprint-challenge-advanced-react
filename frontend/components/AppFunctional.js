@@ -89,6 +89,7 @@ export default function AppFunctional(props) {
     // Use this helper to reset all states to their initial values.+
     setSteps(initialSteps)
     setIndex(4)
+    setEmail(initialEmail)
     setMessage("(2, 2)")
   }
 
