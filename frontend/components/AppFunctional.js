@@ -17,7 +17,7 @@ const initialSubmit = ({
 
 export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
-  // You can delete them and build your own logic from scratch.
+
   const [email, setEmail] = useState(initialEmail)
   const [steps, setSteps] = useState(initialSteps)
   const [index, setIndex] = useState(initialIndex)
@@ -81,7 +81,7 @@ export default function AppFunctional(props) {
     // returns the fully constructed string.
 
       setMessage(`(${x}, ${y})`)
-    // console.log(`(${x}, ${y})`)
+    
     return message
   }
 
@@ -99,7 +99,7 @@ export default function AppFunctional(props) {
     // this helper should return the current index unchanged.
     // var newIndex = index;
 
-    // console.log(`getNextIndex index = ${index}`)
+   
     if(direction === 'left') {
       if ((index === 0) || (index === 3) || (index === 6)) {
         newIndex = index;
@@ -144,9 +144,9 @@ export default function AppFunctional(props) {
       else if(index === 7) {newIndex = 4}
       else if(index === 8) {newIndex = 5}
     }
-    // console.log(`newIndex = ${newIndex}`)
+    
     setIndex(newIndex)
-    // console.log(`index after newIndex is: ${index}`)
+    
 
   }
 
@@ -154,20 +154,15 @@ export default function AppFunctional(props) {
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
 
-
-    // console.log(`getNextIndex`)
     getNextIndex(evt.target.id)
     setSteps(steps + 1)
     getXY()
     submit.steps = steps
-
-    
-    // console.log(`move index = ${index}`)
   }
 
   function onChange(evt) {
     // You will need this to update the value of the input.
-    // console.log(`onChange evt is ${evt.target}`)
+
     setEmail(evt.target.value)
     submit.email = evt.target.value
 
@@ -176,8 +171,6 @@ export default function AppFunctional(props) {
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
     evt.preventDefault()
-
-    // console.log(evt)
 
     axios
     .post('http://localhost:9000/api/result', submit)
