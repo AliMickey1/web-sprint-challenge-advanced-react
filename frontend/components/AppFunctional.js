@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
+import * as Yup from 'yup'
+import formSchema from '../validation/formSchema'
 
 // Suggested initial states
 const initialMessage = '(2, 2)'
@@ -14,19 +16,28 @@ const initialSubmit = ({
   email: '',
 })
 
+const initialValues = {
+  email: '',
+  steps: null,
+  message: "(2, 2)",
+  index: 4,
+};
 
 export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
 
   const [email, setEmail] = useState(initialEmail)
-  const [steps, setSteps] = useState(initialSteps)
+  const [steps, setSteps] = useState(1)
   const [stepsMessage, setStepsMessage] = useState('times')
   const [index, setIndex] = useState(initialIndex)
   const [message, setMessage] = useState(initialMessage)
   const [submit, setSubmit] = useState(initialSubmit)
   const [error, setError] = useState("")
+  const [formErrors, setFormErrors] = useState(initialSubmit);
+  const [formValues, setFormValues] = useState(initialValues);
 
   var newIndex = index;
+  var myStep = steps - 1;
 
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
@@ -89,7 +100,7 @@ export default function AppFunctional(props) {
 
   function reset() {
     // Use this helper to reset all states to their initial values.+
-    setSteps(initialSteps)
+    setSteps(1)
     setIndex(4)
     setEmail(initialEmail)
     setMessage(initialMessage)
@@ -155,12 +166,13 @@ export default function AppFunctional(props) {
     setIndex(newIndex)
     setSteps(steps + 1)
     if(steps <= 0){ 
-      setStepsMessage("time")
+      setStepsMessage(`time`)
+
     }
     else {
       setStepsMessage("times")
     }
-
+return steps
   }
 
   function move(evt) {
@@ -169,20 +181,34 @@ export default function AppFunctional(props) {
 
     getNextIndex(evt.target.id)
     getXY()
+    console.log(`steps on move: ${steps}`)
     submit.steps = steps
+
   }
 
   function onChange(evt) {
     // You will need this to update the value of the input.
+    const { name, value, type } = evt.target
 
-    setEmail(evt.target.value)
+    validate(name, value);
+    setEmail(value)
     submit.email = evt.target.value
+
+  }
+
+  const validate = (name, value) => {
+    Yup.reach(formSchema, name)
+    .validate(value)
+    .then(() => setFormErrors({...formErrors, [name]: ""}))
+    .catch(err => { console.error(err) })
 
   }
 
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
     evt.preventDefault()
+
+
 
     axios
     .post('http://localhost:9000/api/result', submit)
@@ -193,12 +219,15 @@ export default function AppFunctional(props) {
     .catch(err => { console.error(err) })
   }
 
+
+
+
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
         
         <h3 id="coordinates">Coordinates {message}</h3>
-        <h3 id="steps">You moved {steps} {stepsMessage}</h3>
+        <h3 id="steps">You moved {myStep} {stepsMessage}</h3>
       </div>
       <div id="grid">
         {
@@ -222,9 +251,10 @@ export default function AppFunctional(props) {
         <button id="down" onClick={move}>DOWN</button>
         <button id="reset" onClick={reset}>reset</button>
       </div>
+
       <form onSubmit={onSubmit}>
-        <input id="email" type="email" placeholder="type email" onChange={onChange}></input>
-        <input id="submit" type="submit" onChange={onChange} onClick={onSubmit}></input>
+        <input name="email" id="email" type="email" placeholder="type email" onChange={onChange} value={email}></input>
+        <input id="submit" type="submit" onChange={onChange} ></input>
       </form>
     </div>
   )
