@@ -20,6 +20,7 @@ export default function AppFunctional(props) {
 
   const [email, setEmail] = useState(initialEmail)
   const [steps, setSteps] = useState(initialSteps)
+  const [stepsMessage, setStepsMessage] = useState('times')
   const [index, setIndex] = useState(initialIndex)
   const [message, setMessage] = useState(initialMessage)
   const [submit, setSubmit] = useState(initialSubmit)
@@ -91,7 +92,8 @@ export default function AppFunctional(props) {
     setSteps(initialSteps)
     setIndex(4)
     setEmail(initialEmail)
-    setMessage("(2, 2)")
+    setMessage(initialMessage)
+    setError("")
   }
 
   function getNextIndex(direction) {
@@ -152,6 +154,12 @@ export default function AppFunctional(props) {
     
     setIndex(newIndex)
     setSteps(steps + 1)
+    if(steps <= 0){ 
+      setStepsMessage("time")
+    }
+    else {
+      setStepsMessage("times")
+    }
 
   }
 
@@ -160,7 +168,6 @@ export default function AppFunctional(props) {
     // and change any states accordingly.
 
     getNextIndex(evt.target.id)
-
     getXY()
     submit.steps = steps
   }
@@ -191,7 +198,7 @@ export default function AppFunctional(props) {
       <div className="info">
         
         <h3 id="coordinates">Coordinates {message}</h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="steps">You moved {steps} {stepsMessage}</h3>
       </div>
       <div id="grid">
         {
