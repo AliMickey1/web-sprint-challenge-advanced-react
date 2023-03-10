@@ -23,6 +23,7 @@ export default function AppFunctional(props) {
   const [index, setIndex] = useState(initialIndex)
   const [message, setMessage] = useState(initialMessage)
   const [submit, setSubmit] = useState(initialSubmit)
+  const [error, setError] = useState("")
 
   var newIndex = index;
 
@@ -98,11 +99,12 @@ export default function AppFunctional(props) {
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
     // var newIndex = index;
-
+    setError("")
    
     if(direction === 'left') {
       if ((index === 0) || (index === 3) || (index === 6)) {
-        newIndex = index;
+        setError("You can't go left")
+        return newIndex = index;
       }
       else if(index === 1) newIndex = 0
       else if(index === 4) newIndex = 3
@@ -113,7 +115,8 @@ export default function AppFunctional(props) {
     }
     if(direction === 'right') {
       if ((index === 2) || (index === 5) || (index === 8)) {
-        newIndex = index;
+        setError("You can't go right")
+        return newIndex = index;
       }
       else if(index === 0) {newIndex = 1}
       else if(index === 3) {newIndex = 4}
@@ -124,7 +127,8 @@ export default function AppFunctional(props) {
     }
     if(direction === 'down') {
       if ((index === 6) || (index === 7) || (index === 8)) {
-        newIndex = index;
+        setError("You can't go down")
+        return newIndex = index;
       }
       else if(index === 0) {newIndex = 3}
       else if(index === 1) {newIndex = 4}
@@ -135,7 +139,8 @@ export default function AppFunctional(props) {
     }
     if(direction === 'up') {
       if ((index === 0) || (index === 1) || (index === 2)) {
-        newIndex = index;
+        setError("You can't go up")
+        return newIndex = index;
       }
       else if(index === 3) {newIndex = 0}
       else if(index === 4) {newIndex = 1}
@@ -146,7 +151,7 @@ export default function AppFunctional(props) {
     }
     
     setIndex(newIndex)
-    
+    setSteps(steps + 1)
 
   }
 
@@ -155,7 +160,7 @@ export default function AppFunctional(props) {
     // and change any states accordingly.
 
     getNextIndex(evt.target.id)
-    setSteps(steps + 1)
+
     getXY()
     submit.steps = steps
   }
@@ -199,7 +204,7 @@ export default function AppFunctional(props) {
         }
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{error}</h3>
 
       </div>
       <div id="keypad">

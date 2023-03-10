@@ -28,6 +28,7 @@ export default class AppClass extends React.Component {
         myY: 0,
         mySteps: initialSteps,
         myEmail: initialEmail,
+        error: ''
       }
     }
       
@@ -95,7 +96,7 @@ export default class AppClass extends React.Component {
       email: '',
       message: '(2, 2)',
       index: 4,
-      steps: 0
+      mySteps: 0
     })
   }
 
@@ -105,10 +106,12 @@ export default class AppClass extends React.Component {
     // this helper should return the current index unchanged.
 
     // console.log(`the index is: ${this.state.index}`)
+    this.state.error = ''
 
     if(direction === 'left') {
       if ((this.state.index === 0) || (this.state.index === 3) || (this.state.index === 6)) {
-        this.state.newIndex = this.state.index;
+        this.state.error = "You can't go left"
+       return this.state.newIndex = this.state.index;
       }
       else if(this.state.index === 1) this.state.newIndex = 0
       else if(this.state.index === 4) this.state.newIndex = 3
@@ -119,7 +122,8 @@ export default class AppClass extends React.Component {
     }
     if(direction === 'right') {
       if ((this.state.index === 2) || (this.state.index === 5) || (this.state.index === 8)) {
-        this.state.newIndex = this.state.index;
+        this.state.error = "You can't go right"
+        return this.state.newIndex = this.state.index;
       }
       else if(this.state.index === 0) {this.state.newIndex = 1}
       else if(this.state.index === 3) {this.state.newIndex = 4}
@@ -130,7 +134,8 @@ export default class AppClass extends React.Component {
     }
     if(direction === 'down') {
       if ((this.state.index === 6) || (this.state.index === 7) || (this.state.index === 8)) {
-        this.state.newIndex = this.state.index;
+        this.state.error = "You can't go down"
+        return this.state.newIndex = this.state.index;
       }
       else if(this.state.index === 0) {this.state.newIndex = 3}
       else if(this.state.index === 1) {this.state.newIndex = 4}
@@ -141,7 +146,8 @@ export default class AppClass extends React.Component {
     }
     if(direction === 'up') {
       if ((this.state.index === 0) || (this.state.index === 1) || (this.state.index === 2)) {
-        this.state.newIndex = this.state.index;
+        this.state.error = "You can't go up"
+        return this.state.newIndex = this.state.index;
       }
       else if(this.state.index === 3) {this.state.newIndex = 0}
       else if(this.state.index === 4) {this.state.newIndex = 1}
@@ -159,7 +165,7 @@ export default class AppClass extends React.Component {
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
 
-    this.setState({steps: this.state.steps + 1})
+    this.setState({mySteps: this.state.mySteps + 1})
     this.getNextIndex(evt.target.id)
     this.getXY()
 
@@ -192,8 +198,10 @@ export default class AppClass extends React.Component {
     .post(URL, this.state.submit)
     .then(res => {
       console.log(res.data.data)
-      // this.state({...this.state, submit: res.data.data })
-      // this.setState({submit})
+      this.state({...this.state, submit: res.data.data })
+      this.setState({submit})
+      this.reset()
+
     })
     .catch(err => { console.error(err) })
   }
@@ -204,7 +212,7 @@ export default class AppClass extends React.Component {
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">Coordinates {this.state.message}</h3>
-          <h3 id="steps">You moved {this.state.submit.steps} times</h3>
+          <h3 id="steps">You moved {this.state.mySteps} times</h3>
         </div>
         <div id="grid">
           {
@@ -216,7 +224,7 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
-          <h3 id="message"></h3>
+          <h3 id="message">{this.state.error}</h3>
         </div>
         <div id="keypad">
           <button id="left" onClick={this.move}>LEFT</button>
