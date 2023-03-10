@@ -165,7 +165,7 @@ export default function AppFunctional(props) {
     
     setIndex(newIndex)
     setSteps(steps + 1)
-    if(steps <= 0){ 
+    if(myStep <= 0){ 
       setStepsMessage(`time`)
 
     }
