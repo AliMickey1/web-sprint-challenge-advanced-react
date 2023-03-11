@@ -208,15 +208,17 @@ return steps
     // Use a POST request to send a payload to the server.
     evt.preventDefault()
 
-
-
     axios
     .post('http://localhost:9000/api/result', submit)
     .then(res => {
       console.log(res)
       setSubmit(initialSubmit)
+      reset()
+      console.log(`after reset: steps: ${steps}, email: ${email}`)
     })
     .catch(err => { console.error(err) })
+
+    console.log(`steps: ${steps}, email: ${email}`)
   }
 
 

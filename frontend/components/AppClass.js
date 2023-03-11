@@ -53,27 +53,27 @@ export default class AppClass extends React.Component {
       this.state.myX = 1
       this.state.myY = 2
     }
-    else if(this.state.newIndemyX === 4) {
+    else if(this.state.newIndex === 4) {
       this.state.myX =2
       this.state.myY =2
     }
-    else if(this.state.newIndemyX === 5) {
+    else if(this.state.newIndex === 5) {
       this.state.myX = 3
       this.state.myY = 2
     }
-    else if(this.state.newIndemyX === 6) {
+    else if(this.state.newIndex === 6) {
       this.state.myX = 1
       this.state.myY =3
     }
-    else if(this.state.newIndemyX === 7) {
+    else if(this.state.newIndex === 7) {
       this.state.myX = 2
       this.state.myY = 3
     }
-    else if(this.state.newIndemyX === 8) {
+    else if(this.state.newIndex === 8) {
       this.state.myX = 3
       this.state.myY = 3
     }
-    
+    console.log(`x: ${this.state.myX} y: ${this.state.myY}`)
     
   this.getmyXYMessage()
 
