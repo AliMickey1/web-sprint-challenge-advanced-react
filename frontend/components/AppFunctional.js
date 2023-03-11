@@ -7,7 +7,7 @@ import formSchema from '../validation/formSchema'
 // Suggested initial states
 const initialMessage = '(2, 2)'
 const initialEmail = ''
-const initialSteps = 0
+const initialSteps = 1
 const initialIndex = 4 // the index the "B" is at
 const initialSubmit = ({
   x: null,
@@ -27,7 +27,7 @@ export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
 
   const [email, setEmail] = useState(initialEmail)
-  const [steps, setSteps] = useState(1)
+  const [steps, setSteps] = useState(initialSteps)
   const [stepsMessage, setStepsMessage] = useState('times')
   const [index, setIndex] = useState(initialIndex)
   const [message, setMessage] = useState(initialMessage)
@@ -183,6 +183,7 @@ return steps
     getXY()
     console.log(`steps on move: ${steps}`)
     submit.steps = steps
+    console.log(`index: ${index}`)
 
   }
 
@@ -218,7 +219,6 @@ return steps
     })
     .catch(err => { console.error(err) })
 
-    console.log(`steps: ${steps}, email: ${email}`)
   }
 
 

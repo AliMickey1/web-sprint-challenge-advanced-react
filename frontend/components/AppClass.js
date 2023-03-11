@@ -1,15 +1,27 @@
 import React from 'react'
 import axios from 'axios'
+import * as Yup from 'yup'
+import formSchema from '../validation/formSchema'
 
 // Suggested initial states
 const initialMessage = '(2, 2)'
 const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
+const initialSubmit = ({
+  x: null,
+  y: null,
+  steps: null,
+  email: '',
+})
 
-const URL = 'http://localhost:9000/api/result'
+const initialValues = ({
+  email: '',
+  steps: null,
+  message: "(2, 2)",
+  index: 4,
+})
 
-// const 
 
 export default class AppClass extends React.Component {
   constructor() {
@@ -18,20 +30,22 @@ export default class AppClass extends React.Component {
         message: initialMessage,
         index: initialIndex,
         newIndex: null,
-        submit:  [{
-          x: null,
-          y: null,
-          steps: null,
-          email: '',
-          }],
-        myX: 0,
-        myY: 0,
+        myX: 2,
+        myY: 2,
         mySteps: initialSteps,
         myEmail: initialEmail,
         error: '',
-        stepsMessage: 'times'
+        stepsMessage: 'times',
+        steps: initialSteps,
+        email: initialEmail,
+        myStep: initialSteps - 1,
+        submit: initialSubmit,
+        formErrors: initialValues,
       }
+    
     }
+
+
       
   getXY = () => {
     // It it not necessary to have a state to track the coordinates.
@@ -73,32 +87,43 @@ export default class AppClass extends React.Component {
       this.state.myX = 3
       this.state.myY = 3
     }
-    console.log(`x: ${this.state.myX} y: ${this.state.myY}`)
+
     
   this.getmyXYMessage()
 
-    // submit.myX = this.state.myX
-    // submit.y = this.state.y
+    // submit[this.x] = this.state.myX
+    // submit[this.y] = this.state.myY
+
+
   }
 
   getmyXYMessage = () => {
     // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
     // You can use the `getmyXY` helper above to obtain the coordinates, and then `getmyXYMessage`
     // returns the fully constructed string.
+    
     this.setState({message: `(${this.state.myX}, ${this.state.myY})`})
     
     return this.state.message
   }
 
-  reset = () => {
+  reset = (evt) => {
     // Use this helper to reset all states to their initial values.
 
-    this.setState({
-      email: '',
-      message: '(2, 2)',
-      index: 4,
-      mySteps: 0
-    })
+    this.setState({mySteps: initialSteps})
+    this.setState({index: initialIndex})
+    this.setState({email: initialEmail})
+    this.setState({message: initialMessage})
+    this.setState({newIndex: initialIndex})
+    this.setState({myEmail: initialEmail})
+    this.setState({error: ''})
+    this.setState({email: ''})
+
+    this.state.myX = 2
+    this.state.myY = 2
+    this.state.mySteps = initialSteps
+    this.state.email = initialEmail
+
   }
 
   getNextIndex = (direction) => {
@@ -160,57 +185,64 @@ export default class AppClass extends React.Component {
     
     this.setState({index: this.state.newIndex})
     this.setState({mySteps: this.state.mySteps + 1})
+
     if(this.state.mySteps <= 0){ 
       this.setState({stepsMessage: "time"})
     }
     else {
       this.setState({stepsMessage: "times"})
     }
+    return this.state.mySteps
   }
 
   move = (evt) => {
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
-
-
     this.getNextIndex(evt.target.id)
     this.getXY()
-
-    // console.log(`submit: ${this.state.submit}`)
-    // this.setState({submit: this.state.submit.push(steps)}) 
   }
 
   onChange = (evt) => {
     // You will need this to update the value of the input.
 
-
-
     this.setState({email: evt.target.value})
+    submit[this.email] = evt.target.value
+  }
 
+  validate = (name, value) => {
+    Yup.reach(formSchema, name)
+    .validate(value)
+    .then(() => this.setState({formErrors: ""}))
+    .catch(err => { console.error(err) })
 
-    // this.setState({submit: this.state.email = evt.target.value}) 
   }
 
   onSubmit = (evt) => {
     // Use a POST request to send a payload to the server.
 
-    // let { email, submit, steps, x, y } = this.state
-
     evt.preventDefault()
 
-    // submit.push(x, myY, steps, email)
-    console.log(`submit is: ${this.state.submit}`)
+
+    //divider
+    this.state.submit.x = this.state.myX
+    this.state.submit.y = this.state.myY
+    this.state.submit.steps = this.state.mySteps
+    this.state.submit.email = this.state.email
 
     axios
-    .post(URL, this.state.submit)
+    .post('http://localhost:9000/api/result', this.state.submit)
     .then(res => {
-      console.log(res.data.data)
-      this.state({...this.state, submit: res.data.data })
-      this.setState({submit})
-      this.reset()
-
+      console.log(res)
+      this.setState({...this.state, submit: res.data })
     })
     .catch(err => { console.error(err) })
+
+    evt.target.reset()
+    // this.state.myX = 2
+    // this.state.myY = 2
+    // this.state.mySteps = initialSteps
+    // this.state.email = initialEmail
+
   }
 
   render() {
@@ -239,12 +271,16 @@ export default class AppClass extends React.Component {
           <button id="right" onClick={this.move}>RIGHT</button>
           <button id="down" onClick={this.move}>DOWN</button>
           <button id="reset" onClick={this.reset}>reset</button>
+          
         </div>
-        <form>
-          <input id="email" type="email" placeholder="type email" onChange={this.onChange}></input>
-          <input id="submit" type="submit" onChange={this.onChange} onClick={this.onSubmit}></input>
+        <form name="theForm" onSubmit={this.onSubmit}>
+          <input id="email" type="email" placeholder="type email" onChange={this.onChange} value={this.state.email}></input>
+          <input id="submit" type="submit"></input>
         </form>
       </div>
     )
   }
 }
+
+// lady@gaga.com
+
