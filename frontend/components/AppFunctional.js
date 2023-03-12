@@ -1,8 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import * as Yup from 'yup'
-import formSchema from '../validation/formSchema'
+
 
 // Suggested initial states
 const initialMessage = '(2, 2)'
@@ -193,19 +192,11 @@ return newIndex
     // You will need this to update the value of the input.
     const { name, value, type } = evt.target
 
-    // validate(name, value);
     setEmail(value)
     submit.email = evt.target.value
 
   }
 
-  // const validate = (name, value) => {
-  //   Yup.reach(formSchema, name)
-  //   .validate(value)
-  //   .then(() => setFormErrors({...formErrors, [name]: ""}))
-  //   .catch(err => { console.error(err) })
-
-  // }
 
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.

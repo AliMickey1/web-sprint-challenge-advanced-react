@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import * as Yup from 'yup'
-import formSchema from '../validation/formSchema'
+
 
 // Suggested initial states
 const initialMessage = '(2, 2)'
