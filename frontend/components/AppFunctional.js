@@ -1,13 +1,13 @@
 import axios from 'axios'
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import formSchema from '../validation/formSchema'
 
 // Suggested initial states
 const initialMessage = '(2, 2)'
 const initialEmail = ''
-const initialSteps = 1
+const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
 const initialSubmit = ({
   x: null,
@@ -37,7 +37,7 @@ export default function AppFunctional(props) {
   const [formValues, setFormValues] = useState(initialValues);
 
   var newIndex = index;
-  var myStep = steps - 1;
+  var myStep = 0;
 
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
@@ -100,7 +100,7 @@ export default function AppFunctional(props) {
 
   function reset() {
     // Use this helper to reset all states to their initial values.+
-    setSteps(1)
+    setSteps(0)
     setIndex(4)
     setEmail(initialEmail)
     setMessage(initialMessage)
@@ -163,16 +163,16 @@ export default function AppFunctional(props) {
       else if(index === 8) {newIndex = 5}
     }
     
-    setIndex(newIndex)
-    setSteps(steps + 1)
-    if(myStep <= 0){ 
+    if(steps <= 0){ 
       setStepsMessage(`time`)
 
     }
     else {
       setStepsMessage("times")
     }
-return steps
+
+    setSteps(steps + 1)
+return newIndex
   }
 
   function move(evt) {
@@ -181,7 +181,9 @@ return steps
 
     getNextIndex(evt.target.id)
     getXY()
-    console.log(`steps on move: ${steps}`)
+    setIndex(newIndex)
+
+
     submit.steps = steps
     console.log(`index: ${index}`)
 
@@ -191,23 +193,26 @@ return steps
     // You will need this to update the value of the input.
     const { name, value, type } = evt.target
 
-    validate(name, value);
+    // validate(name, value);
     setEmail(value)
     submit.email = evt.target.value
 
   }
 
-  const validate = (name, value) => {
-    Yup.reach(formSchema, name)
-    .validate(value)
-    .then(() => setFormErrors({...formErrors, [name]: ""}))
-    .catch(err => { console.error(err) })
+  // const validate = (name, value) => {
+  //   Yup.reach(formSchema, name)
+  //   .validate(value)
+  //   .then(() => setFormErrors({...formErrors, [name]: ""}))
+  //   .catch(err => { console.error(err) })
 
-  }
+  // }
 
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
     evt.preventDefault()
+
+    const submitSteps = steps
+    submit.steps = submitSteps
 
     axios
     .post('http://localhost:9000/api/result', submit)
@@ -221,7 +226,11 @@ return steps
 
   }
 
-
+  useEffect(() => {
+    
+    console.log(`steps on move: ${steps}`)
+    
+  }, [move])
 
 
   return (
@@ -229,7 +238,7 @@ return steps
       <div className="info">
         
         <h3 id="coordinates">Coordinates {message}</h3>
-        <h3 id="steps">You moved {myStep} {stepsMessage}</h3>
+        <h3 id="steps">You moved {steps} {stepsMessage}</h3>
       </div>
       <div id="grid">
         {
