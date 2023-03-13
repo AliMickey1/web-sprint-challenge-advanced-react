@@ -1,73 +1,68 @@
 // Write your tests here
 import React from 'react'
-import AppFunctional from './frontend/components/AppFunctional'
-import AppClass from './frontend/components/AppClass'
+import AppFunctional from './AppFunctional'
 import { render, fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import userEvent from '@testing-library/user-event'
 
-let up, down, left, right, reset, submit
-let squares, coordinates, steps, message, email
+const queryOptions = { exact: false }
+const waitForOptions = { timeout: 100 }
 
-// const updateStatelessSelectors = document => {
-//   up = document.querySelector('#up')
-//   down = document.querySelector('#down')
-//   left = document.querySelector('#left')
-//   right = document.querySelector('#right')
-//   reset = document.querySelector('#reset')
-//   submit = document.querySelector('#submit')
-// }
+test('renders without errors', () => {
+  render(<AppFunctional />)
+});
 
-const updateStatefulSelectors = document => {
-  squares = document.querySelectorAll('.square')
-  coordinates = document.querySelector('#coordinates')
-  steps = document.querySelector('#steps')
-  message = document.querySelector('#message')
-  email = document.querySelector('#email')
-  up = document.querySelector('#up')
-  down = document.querySelector('#down')
-  left = document.querySelector('#left')
-  right = document.querySelector('#right')
-  reset = document.querySelector('#reset')
-  submit = document.querySelector('#submit')
-}
-
-
-
-describe(`Testing visible texts`, () => {
-  test('sanity', () => {
-    expect(true).toBe(false)
-  })
-  
-  test('submit render', (() => {
+   test('submit render', () => {
     render(<AppFunctional />)
 
-    expect(submit).toBeInTheDocument()
-    expect(submit).toBeTruthy()
-    expect(submit).toHaveTextContent(/submit/i)
+    const submitBtn = document.querySelector('#submit')
+
+    expect(submitBtn).toBeInTheDocument()
+    expect(submitBtn).toBeTruthy()
+
   
-  }))
+  });
   
   test('buttons render', (() => {
     render(<AppFunctional />)
-    
-    expect(coordinates).toBeInTheDocument()
-    expect(coordinates).toBeTruthy()
-    expect(coordinates).toBeVisible()
+
+    const coord = document.querySelector('#coordinates')
+
+    expect(coord).toBeInTheDocument()
+    expect(coord).toBeTruthy()
+    expect(coord).toBeVisible()
   
-  }))
+  }));
+
+  test('email render', (() => {
+    render (<AppFunctional />)
+
+    const emailInput = document.querySelector('#email')
+
+    expect(emailInput).toBeInTheDocument()
+    expect(emailInput).toBeVisible()
+
+  }));
   
-  // test('links render', (() => {
-  //   render(<index.js />)
-  
-  //   const links = screen.queryByLabelText(/navlink/i)
-  
-  //   expect(links).toBeInTheDocument()
-  //   expect(links).toBeTruthy()
-  //   expect(links).toBeVisible()
-  
-  // }))
-  
-})
+  test('renders email error when no email is entered', async () => {
+    render(<AppFunctional />)
+
+    const submitBtn = document.querySelector('#submit')
+    fireEvent.click(up)
+    fireEvent.click(right)
+    fireEvent.click(submitBtn)
+    await screen.findByText('Ouch: email is required', queryOptions, waitForOptions)
+  })
+
+  test('email type input', (() => {
+    render (<AppFunctional />)
+
+    const emailInput = document.querySelector('#email')
+
+    fireEvent.change(email, { target: { value: 'lady@gaga.com' } })
+    expect(email).toHaveValue('lady@gaga.com')
+
+  }));
 
 
 

@@ -212,20 +212,14 @@ return newIndex
         setSubmit(res.data.message)
 
       })
-      // .catch(err => { setError(res.data.message)})
+
       .catch(err => { 
         setError(err.response.data.message)
-        // if(error.request){
-        //   console.log("Data ", error.response.data); 
-        // // console.error(err)
-        // }
-        // else {
-        //   // Other case
-        //   console.log("Error", error.data.message);
-        // }
+
        })
+       setEmail(initialEmail)
+       setError("")
       
-      reset()
   }
 
   return (
@@ -265,5 +259,3 @@ return newIndex
     </div>
   )
 }
-
-// lady@gaga.com

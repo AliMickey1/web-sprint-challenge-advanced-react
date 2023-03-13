@@ -90,10 +90,6 @@ export default class AppClass extends React.Component {
     
   this.getmyXYMessage()
 
-    // submit[this.x] = this.state.myX
-    // submit[this.y] = this.state.myY
-
-
   }
 
   getmyXYMessage = () => {
@@ -130,7 +126,6 @@ export default class AppClass extends React.Component {
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
 
-    // console.log(`the index is: ${this.state.index}`)
     this.state.error = ''
 
     if(direction === 'left') {
@@ -208,13 +203,6 @@ export default class AppClass extends React.Component {
     submit[this.email] = evt.target.value
   }
 
-  validate = (name, value) => {
-    Yup.reach(formSchema, name)
-    .validate(value)
-    .then(() => this.setState({formErrors: ""}))
-    .catch(err => { console.error(err) })
-
-  }
 
   onSubmit = (evt) => {
     // Use a POST request to send a payload to the server.
@@ -230,29 +218,13 @@ export default class AppClass extends React.Component {
 
     axios
     .post('http://localhost:9000/api/result', this.state.submit)
-        .then((res) => res.json())
-    .then((res) => this.setState({submit: res.data }))
-    .catch((err) => { console.error(err) })
-    // .then(res => {
-    //   console.log(res)
-    //   this.setState({...this.state, submit: res.data })
-    // })
-    .catch(err => { console.error(err) })
+    .then((res) => this.setState({error: res.data.message }))
+    .catch((err) => this.setState({error: err.response.data.message }))
 
-    // evt.target.reset()
-    // this.state.myX = 2
-    // this.state.myY = 2
-    // this.state.mySteps = initialSteps
-    // this.state.email = initialEmail
+    this.state.email = initialEmail
 
   }
 
-  // componentDidMount() {
-  //   post('http://localhost:9000/api/result', this.state.submit)
-  //   .then((res) => res.json())
-  //   .then((res) => this.setState({submit: res.data }))
-  //   .catch((err) => { console.error(err) })
-  // }
 
   render() {
     const { className } = this.props
@@ -291,5 +263,4 @@ export default class AppClass extends React.Component {
   }
 }
 
-// lady@gaga.com
 
