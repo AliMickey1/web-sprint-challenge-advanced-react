@@ -230,19 +230,29 @@ export default class AppClass extends React.Component {
 
     axios
     .post('http://localhost:9000/api/result', this.state.submit)
-    .then(res => {
-      console.log(res)
-      this.setState({...this.state, submit: res.data })
-    })
+        .then((res) => res.json())
+    .then((res) => this.setState({submit: res.data }))
+    .catch((err) => { console.error(err) })
+    // .then(res => {
+    //   console.log(res)
+    //   this.setState({...this.state, submit: res.data })
+    // })
     .catch(err => { console.error(err) })
 
-    evt.target.reset()
+    // evt.target.reset()
     // this.state.myX = 2
     // this.state.myY = 2
     // this.state.mySteps = initialSteps
     // this.state.email = initialEmail
 
   }
+
+  // componentDidMount() {
+  //   post('http://localhost:9000/api/result', this.state.submit)
+  //   .then((res) => res.json())
+  //   .then((res) => this.setState({submit: res.data }))
+  //   .catch((err) => { console.error(err) })
+  // }
 
   render() {
     const { className } = this.props

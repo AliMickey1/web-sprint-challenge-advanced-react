@@ -32,8 +32,7 @@ export default function AppFunctional(props) {
   const [message, setMessage] = useState(initialMessage)
   const [submit, setSubmit] = useState(initialSubmit)
   const [error, setError] = useState("")
-  const [formErrors, setFormErrors] = useState(initialSubmit);
-  const [formValues, setFormValues] = useState(initialValues);
+  const [data, setData] = useState(null)
 
   var newIndex = index;
   var myStep = 0;
@@ -104,6 +103,8 @@ export default function AppFunctional(props) {
     setEmail(initialEmail)
     setMessage(initialMessage)
     setError("")
+    setData(null)
+    setSubmit(initialSubmit)
   }
 
   function getNextIndex(direction) {
@@ -206,23 +207,16 @@ return newIndex
     submit.steps = submitSteps
 
     axios
-    .post('http://localhost:9000/api/result', submit)
-    .then(res => {
-      console.log(res)
-      setSubmit(initialSubmit)
-      reset()
-      console.log(`after reset: steps: ${steps}, email: ${email}`)
-    })
-    .catch(err => { console.error(err) })
+      .post('http://localhost:9000/api/result', submit)
+      .then(res => {
+        setError(res.data.message)
+        setData(res.data.message)
+        setSubmit(res.data.message)
+
+      })
+      .catch(err => { console.error(err) })
 
   }
-
-  useEffect(() => {
-    
-    console.log(`steps on move: ${steps}`)
-    
-  }, [move])
-
 
   return (
     <div id="wrapper" className={props.className}>
@@ -261,3 +255,5 @@ return newIndex
     </div>
   )
 }
+
+// lady@gaga.com
