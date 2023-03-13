@@ -209,8 +209,6 @@ export default class AppClass extends React.Component {
 
     evt.preventDefault()
 
-
-    //divider
     this.state.submit.x = this.state.myX
     this.state.submit.y = this.state.myY
     this.state.submit.steps = this.state.mySteps

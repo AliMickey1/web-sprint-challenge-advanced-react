@@ -203,23 +203,15 @@ return newIndex
 
     const submitSteps = steps
     submit.steps = submitSteps
+    submit.email = email
   
     axios
       .post('http://localhost:9000/api/result', submit)
-      .then(res => {
-        setError(res.data.message)
-        setData(res.data.message)
-        setSubmit(res.data.message)
-
-      })
-
-      .catch(err => { 
-        setError(err.response.data.message)
-
-       })
-       setEmail(initialEmail)
-       setError("")
+      .then(res => {setError(res.data.message)})
+      .catch(err => {setError(err.response.data.message)})
       
+      setEmail('')
+    
   }
 
   return (
@@ -252,9 +244,9 @@ return newIndex
         <button id="reset" onClick={reset}>reset</button>
       </div>
 
-      <form onSubmit={onSubmit}>
+      <form name="theForm" onSubmit={onSubmit}>
         <input name="email" id="email" type="email" placeholder="type email" onChange={onChange} value={email}></input>
-        <input id="submit" type="submit" onChange={onChange} ></input>
+        <input id="submit" type="submit"></input>
       </form>
     </div>
   )
