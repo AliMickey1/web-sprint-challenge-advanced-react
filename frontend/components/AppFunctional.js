@@ -185,8 +185,6 @@ return newIndex
 
 
     submit.steps = steps
-    console.log(`index: ${index}`)
-
   }
 
   function onChange(evt) {
@@ -205,7 +203,7 @@ return newIndex
 
     const submitSteps = steps
     submit.steps = submitSteps
-
+  
     axios
       .post('http://localhost:9000/api/result', submit)
       .then(res => {
@@ -214,8 +212,20 @@ return newIndex
         setSubmit(res.data.message)
 
       })
-      .catch(err => { console.error(err) })
-
+      // .catch(err => { setError(res.data.message)})
+      .catch(err => { 
+        setError(err.response.data.message)
+        // if(error.request){
+        //   console.log("Data ", error.response.data); 
+        // // console.error(err)
+        // }
+        // else {
+        //   // Other case
+        //   console.log("Error", error.data.message);
+        // }
+       })
+      
+      reset()
   }
 
   return (
